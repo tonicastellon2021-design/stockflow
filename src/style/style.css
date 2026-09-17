@@ -1,0 +1,320 @@
+/* Sidebar.css */
+:root {
+  --sf-dark: #212529;
+  --sf-dark-hover: #2b3137;
+  --sf-green: #198754;
+  --sf-green-hover: #146c43;
+  --sf-sidebar-width: 260px;
+  --sf-sidebar-collapsed-width: 75px;
+}
+
+.text-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.custom-modal-anim {
+  animation: modalScaleIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.form_container {
+  width: 100%;
+  max-width: 430px;
+  margin: 40px auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 30px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7faf8 100%);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(16, 185, 129, 0.04);
+  border-radius: 18px;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+.logo_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 50%;
+}
+
+.title_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #212121;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  max-width: 90%;
+  line-height: 1.3rem;
+  color: #8b8e98;
+}
+
+.input_container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input_label {
+  font-size: 0.85rem;
+  color: #495057;
+  font-weight: 600;
+}
+
+.input_field_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input_field_wrapper .icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1.25rem;
+  color: #141b34;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.input_field {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px 0 44px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.95rem;
+  border: 1px solid #e5e5e5;
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+}
+
+.input_field:focus {
+  border: 1px solid var(--sf-green);
+  box-shadow: 0px 0px 0px 3px rgba(16, 185, 129, 0.15);
+}
+
+.sign-in_btn {
+  width: 100%;
+  height: 46px;
+  border: 0;
+  background: var(--sf-green);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+  margin-top: 0;
+}
+
+.sign-in_btn:hover {
+  background: var(--sf-green-hover);
+  transform: translateY(-1px);
+}
+
+.note {
+  font-size: 0.8rem;
+  color: #8b8e98;
+  text-decoration: underline;
+  margin: 5px 0 0 0;
+  cursor: pointer;
+}
+
+.admin-wrapper {
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+  overflow: hidden;
+}
+
+/* Transición suave para colapsar */
+.sidebar-container {
+  width: var(--sf-sidebar-width);
+  min-width: var(--sf-sidebar-width);
+  background-color: var(--sf-dark);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+}
+
+.sidebar-container.collapsed {
+  width: var(--sf-sidebar-collapsed-width);
+  min-width: var(--sf-sidebar-collapsed-width);
+}
+
+/* Ocultar texto suavemente en estado colapsado */
+.sidebar-container.collapsed .hide-on-collapse {
+  display: none !important;
+}
+
+/* Ajustes de enlaces de navegación */
+.sidebar-nav-link {
+  color: #adb5bd;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+  white-space: nowrap;
+}
+
+.sidebar-nav-link:hover {
+  background-color: var(--sf-dark-hover);
+  color: #ffffff;
+}
+
+.sidebar-nav-link.active {
+  background-color: var(--sf-green);
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Color del logo StockFlow */
+.brand-green {
+  color: var(--sf-green);
+}
+
+.btn-stockflow {
+  background-color: var(--sf-green);
+  border-color: var(--sf-green);
+  color: #ffffff;
+}
+.btn-stockflow:hover {
+  background-color: var(--sf-green-hover);
+  border-color: var(--sf-green-hover);
+  color: #ffffff;
+}
+.page-item.active .page-link {
+  background-color: var(--sf-green) !important;
+  border-color: var(--sf-green) !important;
+  color: #ffffff !important;
+}
+.page-link {
+  color: var(--sf-green);
+}
+.page-link:hover {
+  color: var(--sf-green-hover);
+}
+.badge-activo {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.badge-inactivo {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.usuarios-table-card {
+  width: 100%;
+}
+
+.usuarios-page-shell {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+}
+
+.usuarios-pagination-compact .card-footer nav {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.usuarios-pagination-compact .card-footer {
+  justify-content: center !important;
+}
+
+.user-action {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.user-action-edit {
+  color: var(--sf-green);
+  background-color: #ecfdf5;
+}
+
+.user-action-edit:hover,
+.user-action-edit:focus-visible {
+  color: #ffffff;
+  background-color: var(--sf-green);
+  border-color: var(--sf-green);
+}
+
+.user-action-delete {
+  color: #b42318;
+  background-color: #fef3f2;
+}
+
+.user-action-delete:hover,
+.user-action-delete:focus-visible {
+  color: #ffffff;
+  background-color: #b42318;
+  border-color: #b42318;
+}
+
+.input_field.input_error {
+  border-color: #ef4444;
+  outline: 1px solid #ef4444;
+}
+
+.error_text {
+  color: #ef4444;
+  font-size: 0.8rem;
+  min-height: 0.96rem;
+  margin: 0;
+  display: block;
+  line-height: 1.2;
+}
+
+@keyframes modalScaleIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
