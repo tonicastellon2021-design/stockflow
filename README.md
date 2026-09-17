@@ -1,77 +1,38 @@
-# React + TypeScript + Vite
+# StockFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Proyecto de práctica personal en React + TypeScript, construido para reforzar temas de rendimiento, hooks avanzados y patrones de arquitectura frontend
 
-Currently, two official plugins are available:
+**Estado: en construcción activa.** No es un proyecto terminado ni pensado para producción — es un espacio de práctica. Algunas partes del panel de administración están incompletas o en proceso de construcion.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+- React + TypeScript + Vite
+- TanStack Query
+- Zustand
+- React Hook Form
+- React Router
+- Bootstrap + SweetAlert2
+- MockAPI como backend simulado
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Estado actual
 
-Note: This will impact Vite dev & build performances.
+- ✅ Catálogo público con filtros, paginación y carrito
+- ✅ Autenticación con persistencia de sesión (Zustand + localStorage)
+- ✅ Rutas protegidas por rol (cliente / admin)
+- ✅ Flujo de pedido con reducción de stock
+- 🚧 CRUD de usuarios del panel admin (formulario de crear/editar aún no conectado)
+- 🚧 CRUD de productos y pedidos del panel admin
+- 🚧 Pulido de estilos y consistencia visual en progreso
 
-## Expanding the ESLint configuration
+## Nota
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Al ser un proyecto de práctica sobre una API simulada (MockAPI), los datos de usuarios son de prueba y no representan información real
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Usuarios de prueba
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Puedes utilizar estos usuarios para probar el inicio de sesión y las rutas según el rol:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+| Correo                    | Contraseña | Rol           |
+| ------------------------- | ---------- | ------------- |
+| `admin@gmail.com`         | `12345`    | Administrador |
+| `clientePrueba@yahoo.com` | `123`      | Cliente       |
