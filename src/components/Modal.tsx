@@ -39,17 +39,18 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
           className="modal-dialog modal-dialog-centered modal-lg"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="custom-modal-anim modal-content bg-dark text-white border-secondary shadow">
-            <div className="modal-header border-secondary">
-              <h5 className="modal-title fw-bold">{title}</h5>
+          <div className="custom-modal-anim modal-content border-0 shadow-lg">
+            <div className="modal-header border-bottom px-4 py-3">
+              <h5 className="modal-title text-dark fw-bold">{title}</h5>
               <button
                 type="button"
-                className="btn-close btn-close-white"
+                className="btn-close"
                 onClick={onClose}
+                aria-label="Cerrar modal"
               />
             </div>
 
-            <div className="modal-body">{children}</div>
+            <div className="modal-body bg-light-subtle p-4">{children}</div>
           </div>
         </div>
       </div>

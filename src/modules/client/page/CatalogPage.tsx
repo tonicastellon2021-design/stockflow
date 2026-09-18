@@ -32,7 +32,7 @@ export function CatalogPage() {
   if (isLoading) {
     return (
       <div className="alert alert-warning" role="alert">
-        cargando productos!
+        ¡cargando productos!
       </div>
     );
   }
@@ -40,7 +40,7 @@ export function CatalogPage() {
   if (isError) {
     return (
       <div className="alert alert-danger" role="alert">
-        No se pudieron cargar los productos!
+        ¡No se pudieron cargar los productos!
       </div>
     );
   }

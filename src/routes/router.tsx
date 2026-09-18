@@ -15,59 +15,64 @@ import { Reportes } from "../modules/admin/pages/Reportes";
 import { ProductosCrud } from "../modules/admin/pages/ProductosCrud";
 import { RouterAdmin, RouterClient, RouterLogin } from "./protectedRoute";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: (
+        <RouterClient>
+          <ClientLayout />
+        </RouterClient>
+      ),
+      children: [
+        {
+          index: true,
+          element: <CatalogPage />,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      element: (
+        <RouterLogin>
+          <LoginLayout />
+        </RouterLogin>
+      ),
+      children: [
+        {
+          index: true,
+          element: <LoginPage />,
+        },
+        {
+          path: "register",
+          element: <RegisterPage />,
+        },
+      ],
+    },
+    {
+      path: "/admin",
+      element: (
+        <RouterAdmin>
+          <AdminLayout />
+        </RouterAdmin>
+      ),
+      children: [
+        { index: true, element: <Navigate replace to="/admin/reportes" /> },
+        { path: "reportes", element: <Reportes /> },
+        { path: "usuarios", element: <UsuariosCruds /> },
+        { path: "pedidos", element: <PedidosCrud /> },
+        { path: "productos", element: <ProductosCrud /> },
+      ],
+    },
+    {
+      path: "*",
+      element: <Navigate replace to="/" />,
+    },
+  ],
   {
-    path: "/",
-    element: (
-      <RouterClient>
-        <ClientLayout />
-      </RouterClient>
-    ),
-    children: [
-      {
-        index: true,
-        element: <CatalogPage />,
-      },
-    ],
+    basename: "/stockflow",
   },
-  {
-    path: "/login",
-    element: (
-      <RouterLogin>
-        <LoginLayout />
-      </RouterLogin>
-    ),
-    children: [
-      {
-        index: true,
-        element: <LoginPage />,
-      },
-      {
-        path: "register",
-        element: <RegisterPage />,
-      },
-    ],
-  },
-  {
-    path: "/admin",
-    element: (
-      <RouterAdmin>
-        <AdminLayout />
-      </RouterAdmin>
-    ),
-    children: [
-      { index: true, element: <Navigate to="/admin/reportes" /> },
-      { path: "reportes", element: <Reportes /> },
-      { path: "usuarios", element: <UsuariosCruds /> },
-      { path: "pedidos", element: <PedidosCrud /> },
-      { path: "productos", element: <ProductosCrud /> },
-    ],
-  },
-  {
-    path: "*",
-    element: <Navigate replace to="/" />,
-  },
-]);
+);
 
 export default function AppRouter() {
   return <RouterProvider router={router} />;

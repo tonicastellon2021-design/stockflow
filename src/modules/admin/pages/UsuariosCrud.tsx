@@ -4,7 +4,11 @@ import { useSearchParams } from "react-router-dom";
 import { useCrudUsuarios } from "../../../hooks/useCrudUsuarios";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { useEffect, useState } from "react";
-import { Modal } from "../../../components/Modal";
+import {
+  UserForm,
+  type UserFormData,
+} from "../../../components/forms/UserForm";
+import type { User } from "../../../types/User";
 
 export function UsuariosCruds() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,13 +21,21 @@ export function UsuariosCruds() {
   const debounce = useDebounce(searchTerm).trim();
 
   useEffect(() => {
-    if (!debounce) {
-      setSearchParams({ page: "1" });
-      return;
-    }
+    if (debounce === searchParam) return;
 
-    setSearchParams({ search: debounce, page: "1" });
-  }, [debounce, setSearchParams]);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+
+      if (debounce) {
+        next.set("search", debounce);
+      } else {
+        next.delete("search");
+      }
+
+      next.set("page", "1");
+      return next;
+    });
+  }, [debounce, searchParam, setSearchParams]);
 
   const {
     data: usuarios,
@@ -39,12 +51,14 @@ export function UsuariosCruds() {
     userSeleccionado,
     abrirModalCrear,
     abrirModalEditar,
+    createUser,
+    updateUser,
   } = useCrudUsuarios();
 
   if (isLoading) {
     return (
       <div className="alert alert-warning" role="alert">
-        cargando usuarios!
+        ¡cargando usuarios!
       </div>
     );
   }
@@ -52,10 +66,33 @@ export function UsuariosCruds() {
   if (isError) {
     return (
       <div className="alert alert-danger" role="alert">
-        No se pudieron cargar los usuarios!
+        ¡No se pudieron cargar los usuarios!
       </div>
     );
   }
+
+  const onSubmit = async (data: UserFormData) => {
+    if (userSeleccionado) {
+      const userUpdate: User = {
+        id: userSeleccionado.id,
+        correo: data.correo,
+        password: data.password,
+        rol: data.rol,
+      };
+
+      await updateUser(userUpdate);
+      return;
+    }
+    const newUSer: User = {
+      id: crypto.randomUUID(),
+      correo: data.correo,
+      password: data.password,
+      rol: data.rol,
+    };
+
+    await createUser(newUSer);
+    cerrarModal();
+  };
 
   return (
     <div className="usuarios-page-shell">
@@ -111,13 +148,20 @@ export function UsuariosCruds() {
                 </td>
                 <td className="text-secondary">{usuario.password}</td>
                 <td>
-                  <span className="badge bg-white text-dark border px-2 py-1.5 fw-normal">
+                  <span
+                    className={`badge border px-2 py-1 fw-normal ${
+                      usuario.rol === "admin"
+                        ? "bg-danger-subtle text-danger border-danger-subtle"
+                        : "bg-success-subtle text-success border-success-subtle"
+                    }`}
+                  >
                     {usuario.rol}
                   </span>
                 </td>
                 <td className="text-end pe-4">
                   <div className="d-flex justify-content-end gap-1">
                     <button
+                      disabled={usuario.rol === "admin"}
                       onClick={() => abrirModalEditar(usuario)}
                       className="btn btn-sm user-action user-action-edit"
                       title="Editar"
@@ -126,6 +170,7 @@ export function UsuariosCruds() {
                       <i className="bi bi-pencil-square"></i>
                     </button>
                     <button
+                      disabled={usuario.rol === "admin"}
                       onClick={() => deleteUser(usuario)}
                       className="btn btn-sm user-action user-action-delete"
                       title="Eliminar"
@@ -140,42 +185,14 @@ export function UsuariosCruds() {
           )}
         </tbody>
       </Tabla>
-      <Modal
-        isOpen={modalIsOpen}
-        onClose={cerrarModal}
-        title={userSeleccionado ? "Editar un cliente" : "Crear un cliente"}
-      >
-        <form>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Correo electrónico</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="nombre@correo.com"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label fw-semibold">Contraseña</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="0801XXXXXXXXXX"
-            />
-          </div>
-          <div className="d-flex justify-content-end gap-2 mt-4">
-            <button
-              onClick={cerrarModal}
-              type="button"
-              className="btn btn-light"
-            >
-              Cancelar
-            </button>
-            <button type="submit" className="btn btn-success">
-              {userSeleccionado ? "Actualizar cliente" : "Guardar cliente"}
-            </button>
-          </div>
-        </form>
-      </Modal>
+      {modalIsOpen && (
+        <UserForm
+          onSubmit={onSubmit}
+          modalIsOpen={modalIsOpen}
+          cerrarModal={cerrarModal}
+          userSeleccionado={userSeleccionado}
+        ></UserForm>
+      )}
     </div>
   );
 }

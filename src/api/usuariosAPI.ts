@@ -7,7 +7,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { errorValid } from "../utils/cartAlerts";
 
 //funcion para traer usuarios (10 por peticion)
 export async function getUsers(
@@ -24,9 +23,6 @@ export async function getUsers(
 
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return null;
-    }
     throw new Error("Error al traer la data de los usuarios", {
       cause: error,
     });
@@ -81,6 +77,31 @@ async function postUser(user: User) {
   }
 }
 
+async function putUser(user: User) {
+  try {
+    const response = await orderAPI.put(`/usuarios/${user.id}`, user);
+    return response.data;
+  } catch (error) {
+    throw (
+      new Error("Error actualizando el usuario"),
+      {
+        cause: error,
+      }
+    );
+  }
+}
+
+export function usePutUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: putUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+    },
+  });
+}
+
 export function useCreateUser() {
   const queryClient = useQueryClient();
 
@@ -88,9 +109,6 @@ export function useCreateUser() {
     mutationFn: postUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["usuarios"] });
-    },
-    onError: () => {
-      errorValid("Error", "Error creando el usuario");
     },
   });
 }

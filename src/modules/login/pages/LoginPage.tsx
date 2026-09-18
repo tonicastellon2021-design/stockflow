@@ -25,7 +25,7 @@ export function LoginPage() {
 
       Swal.fire({
         icon: "error",
-        title: "error",
+        title: "Error",
         text: mensaje,
       });
     }

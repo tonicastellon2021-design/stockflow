@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Pedido } from "../types/Pedido";
 import { orderAPI } from "./axiosClients";
-import { errorValid } from "../utils/cartAlerts";
 
 async function postPedido(pedido: Pedido) {
   try {
@@ -21,9 +20,6 @@ export function useCreatePedido() {
     mutationFn: postPedido,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pedidos"] });
-    },
-    onError: () => {
-      errorValid("Error", "Error creando el pedido");
     },
   });
 }

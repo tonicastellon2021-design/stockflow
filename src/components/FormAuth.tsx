@@ -36,10 +36,13 @@ export function FormAuth({ title, subTitle, buttonText, onSubmit }: Props) {
       </div>
 
       <div className="input_container">
-        <label className="input_label">Correo electrónico</label>
+        <label htmlFor="auth-email" className="input_label">
+          Correo electrónico
+        </label>
         <div className="input_field_wrapper">
           <i className="bi bi-envelope icon"></i>
           <input
+            id="auth-email"
             placeholder="nombre@correo.com"
             title="Correo electrónico"
             type="email"
@@ -57,10 +60,13 @@ export function FormAuth({ title, subTitle, buttonText, onSubmit }: Props) {
       </div>
 
       <div className="input_container">
-        <label className="input_label">Contraseña</label>
+        <label htmlFor="auth-password" className="input_label">
+          Contraseña
+        </label>
         <div className="input_field_wrapper">
           <i className="bi bi-lock icon"></i>
           <input
+            id="auth-password"
             {...register("password", {
               required: "La contraseña es obligatoria",
               minLength: {
