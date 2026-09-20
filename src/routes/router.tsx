@@ -4,16 +4,22 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ClientLayout from "../modules/client/clientLayout/ClientLayout";
-import AdminLayout from "../modules/admin/adminLayout/adminLayout";
 import { CatalogPage } from "../modules/client/page/CatalogPage";
-import LoginLayout from "../modules/login/layout/LoginLayout";
 import { LoginPage } from "../modules/login/pages/LoginPage";
 import { RegisterPage } from "../modules/login/pages/RegisterPage";
-import { PedidosCrud } from "../modules/admin/pages/PedidosCrud";
-import { UsuariosCruds } from "../modules/admin/pages/UsuariosCrud";
-import { Reportes } from "../modules/admin/pages/Reportes";
-import { ProductosCrud } from "../modules/admin/pages/ProductosCrud";
 import { RouterAdmin, RouterClient, RouterLogin } from "./protectedRoute";
+import { lazy } from "react";
+import LoginLayout from "../modules/login/layout/LoginLayout";
+
+const AdminLayout = lazy(
+  () => import("../modules/admin/adminLayout/adminLayout"),
+);
+const PedidosCrud = lazy(() => import("../modules/admin/pages/PedidosCrud"));
+const UsuariosCruds = lazy(() => import("../modules/admin/pages/UsuariosCrud"));
+const Reportes = lazy(() => import("../modules/admin/pages/Reportes"));
+const ProductosCrud = lazy(
+  () => import("../modules/admin/pages/ProductosCrud"),
+);
 
 const router = createBrowserRouter(
   [

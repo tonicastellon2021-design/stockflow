@@ -19,7 +19,7 @@ export function RegisterPage() {
     if (usuarioExiste !== null) {
       errorValid(
         "Correo existente",
-        "está dirección de correo ya esta registrada",
+        "Esta dirección de correo ya está registrada",
       );
       return;
     }

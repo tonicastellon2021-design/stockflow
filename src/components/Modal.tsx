@@ -5,9 +5,16 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
+  scrollable?: boolean;
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+  scrollable = false,
+}: ModalProps) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -36,7 +43,9 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
         onClick={onClose}
       >
         <div
-          className="modal-dialog modal-dialog-centered modal-lg"
+          className={`modal-dialog modal-dialog-centered modal-lg${
+            scrollable ? " modal-dialog-scrollable" : ""
+          }`}
           onClick={(event) => event.stopPropagation()}
         >
           <div className="custom-modal-anim modal-content border-0 shadow-lg">

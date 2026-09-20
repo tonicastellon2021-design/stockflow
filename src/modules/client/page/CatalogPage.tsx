@@ -13,6 +13,7 @@ export function CatalogPage() {
 
   const pageParam = searchParams.get("page");
   const categoryParam = searchParams.get("categoria");
+  const search = searchParams.get("search");
 
   const page = pageParam ? Number(pageParam) : 1;
   const categoria = categoryParam || null;
@@ -25,6 +26,7 @@ export function CatalogPage() {
     page,
     limit: PAGE_SIZE,
     categoria,
+    search,
   });
 
   const isLastPage = !products || products.length < PAGE_SIZE;
@@ -32,7 +34,7 @@ export function CatalogPage() {
   if (isLoading) {
     return (
       <div className="alert alert-warning" role="alert">
-        ¡cargando productos!
+        ¡Cargando productos!
       </div>
     );
   }

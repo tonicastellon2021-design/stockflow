@@ -1,10 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { IconCarrito } from "./IconCarrito";
 import { useAuthStore } from "../store/authStore";
+import { useSearchParamDebounced } from "../hooks/useSearchParamDebounced";
 
 export function NavbarClien() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
+  const { searchTerm, setSearchTerm } = useSearchParamDebounced("search");
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -65,7 +68,11 @@ export function NavbarClien() {
           )}
 
           <div className="d-flex align-items-center gap-3 w-100 w-lg-auto justify-content-end">
-            <form className="d-flex" role="search">
+            <form
+              className="d-flex"
+              role="search"
+              onSubmit={(event) => event.preventDefault()}
+            >
               <div className="input-group">
                 <span
                   className="input-group-text bg-secondary border-secondary text-white"
@@ -79,6 +86,8 @@ export function NavbarClien() {
                   placeholder="Buscar productos..."
                   aria-label="Buscar"
                   aria-describedby="search-icon"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
                 />
               </div>
             </form>

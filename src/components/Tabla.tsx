@@ -4,13 +4,13 @@ import { Pagination } from "./Pagination";
 interface Props {
   title: string;
   description: string;
-  titleButtonNew: string;
+  titleButtonNew?: string;
   children: ReactNode;
   isLastPage: boolean;
   className?: string;
   searchValue: string;
   onSearchChange: (value: string) => void;
-  actionButton: () => void;
+  actionButton?: () => void;
 }
 
 export function Tabla({
@@ -19,11 +19,19 @@ export function Tabla({
   titleButtonNew,
   actionButton,
   children,
-  className = "",
+  className,
   isLastPage,
   searchValue,
   onSearchChange,
 }: Props) {
+  const cardClassName = [
+    "card shadow-sm border-0 rounded-3",
+    "table-pagination-compact",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="container-fluid p-0">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -31,17 +39,19 @@ export function Tabla({
           <h2 className="h4 mb-1 text-dark fw-bold">{title}</h2>
           <p className="text-muted small mb-0">{description}</p>
         </div>
-        <button
-          onClick={actionButton}
-          className="btn btn-stockflow d-flex align-items-center gap-2 px-3 py-2 fw-medium shadow-sm"
-        >
-          <i className="bi bi-person-plus-fill"></i>
-          {titleButtonNew}
-        </button>
+        {titleButtonNew && (
+          <button
+            onClick={actionButton}
+            className="btn btn-stockflow d-flex align-items-center gap-2 px-3 py-2 fw-medium shadow-sm"
+          >
+            <i className="bi-plus-lg"></i>
+            {titleButtonNew}
+          </button>
+        )}
       </div>
 
       {/* TARJETA PRINCIPAL */}
-      <div className={`card shadow-sm border-0 rounded-3 ${className}`}>
+      <div className={cardClassName}>
         <div className="card-header bg-white py-3 border-bottom-0">
           <div className="row">
             <div className="col-md-4">

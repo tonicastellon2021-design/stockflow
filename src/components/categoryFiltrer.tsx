@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { CATEGORIAS } from "../constants/categorias";
 
 export function CategoryFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,13 +34,11 @@ export function CategoryFilter() {
             style={{ maxWidth: "260px" }}
           >
             <option value="">Todas las categorías</option>
-            <option value="Procesador">Procesadores</option>
-            <option value="Memoria RAM">Memoria RAM</option>
-            <option value="Tarjeta gráfica">Tarjetas de gráficas</option>
-            <option value="Tarjeta madre">Tarjeta madre</option>
-            <option value="Almacenamiento">Almacenamiento</option>
-            <option value="Refrigeración">Refrigeración</option>
-            <option value="Fuente de poder">Fuente de poder</option>
+            {CATEGORIAS.map(({ value, label }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

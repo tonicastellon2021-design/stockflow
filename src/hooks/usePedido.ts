@@ -1,4 +1,4 @@
-import { useCreatePedido } from "../api/pedidoApi";
+import { useCreatePedido, usePutPedido } from "../api/pedidoApi";
 import { useCartStore } from "../store/cartStore";
 import { useAuthStore } from "../store/authStore";
 import type { CartItem } from "../types/CartItem";
@@ -17,6 +17,7 @@ export function usePedido() {
   const vaciarCarrito = useCartStore((s) => s.vaciarCarrito);
   const mutate = useCreatePedido();
   const reducirStockMutation = useReducirStock();
+  const putMutation = usePutPedido();
 
   const procesarPedido = async ({ montoTotal, cart, tipoPago }: Props) => {
     if (user === null) {
@@ -69,5 +70,21 @@ export function usePedido() {
     return true;
   };
 
-  return { procesarPedido };
+  const putPedido = async (pedido: Pedido, nuevoEstado: string) => {
+    try {
+      const pedidoActualizado = {
+        ...pedido,
+        estado: nuevoEstado,
+      };
+
+      await putMutation.mutateAsync(pedidoActualizado);
+      successF("Estado actualizado", "El estado se actualizo correctamente");
+    } catch (error) {
+      const mensaje =
+        error instanceof Error ? error.message : "Error desconocido";
+      errorValid("Error", mensaje);
+    }
+  };
+
+  return { procesarPedido, putPedido };
 }

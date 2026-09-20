@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "../../../components/SidebarAdmin";
 
 const AdminLayout = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsCollapsed((prev) => !prev);
-  };
+  }, []);
 
   return (
     <div className="admin-wrapper">

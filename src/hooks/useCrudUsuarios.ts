@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   getUSerLogin,
   useCreateUser,
@@ -15,75 +15,91 @@ export function useCrudUsuarios() {
   const createMutation = useCreateUser();
   const updateMutation = usePutUser();
 
-  const cerrarModal = () => {
+  const cerrarModal = useCallback(() => {
     setModalIsOpen(false);
     setUserSeleccionado(null);
-  };
+  }, []);
 
-  const abrirModalEditar = (user: User) => {
+  const abrirModalEditar = useCallback((user: User) => {
     setUserSeleccionado(user);
     setModalIsOpen(true);
-  };
+  }, []);
 
-  const abrirModalCrear = () => {
+  const abrirModalCrear = useCallback(() => {
     setUserSeleccionado(null);
     setModalIsOpen(true);
-  };
+  }, []);
 
-  const deleteUser = async (user: User) => {
-    const confir = await confirmDelete(
-      "¿Eliminar usuario?",
-      `El usuario con el email: ${user.correo} se va a eliminar`,
-    );
+  const deleteUser = useCallback(
+    async (user: User) => {
+      const confir = await confirmDelete(
+        "¿Eliminar usuario?",
+        `El usuario con el email: ${user.correo} se va a eliminar`,
+      );
 
-    if (!confir) return;
+      if (!confir) return;
 
-    try {
-      await deleteMutation.mutateAsync(user.id);
+      try {
+        await deleteMutation.mutateAsync(user.id);
 
-      successF("Usuario eliminado", "El usuario ha sido eliminado con exito");
-    } catch (error) {
-      const mensaje =
-        error instanceof Error ? error.message : "Error desconocido";
+        successF("Usuario eliminado", "El usuario ha sido eliminado con exito");
+      } catch (error) {
+        const mensaje =
+          error instanceof Error ? error.message : "Error desconocido";
 
-      errorValid("Error al eliminar", mensaje);
-      console.error(error);
-    }
-  };
-
-  const createUser = async (user: User) => {
-    try {
-      await createMutation.mutateAsync(user);
-      successF("Usuario creado", "El usuario fue creado correctamente");
-    } catch (error) {
-      const mensaje =
-        error instanceof Error ? error.message : "No se pudo crear el usuario";
-
-      errorValid("error al crear", mensaje);
-    }
-  };
-
-  const updateUser = async (user: User) => {
-    try {
-      const userExiste = await getUSerLogin(user.correo);
-
-      if (!userExiste) {
-        errorValid("Usuario invalido", "El usuario no existe actualmente");
-        return;
+        errorValid("Error al eliminar", mensaje);
+        console.error(error);
       }
+    },
+    [deleteMutation],
+  );
 
-      await updateMutation.mutateAsync(user);
-      successF("usuario actualizado", "El usuario se actualizo correctamente");
-      cerrarModal();
-    } catch (error) {
-      const mensaje =
-        error instanceof Error
-          ? error.message
-          : "No se pudo actualizar el usuario";
+  const createUser = useCallback(
+    async (user: User) => {
+      try {
+        const userExis = await getUSerLogin(user.correo);
 
-      errorValid("Error al actualazar", mensaje);
-    }
-  };
+        if (userExis) {
+          errorValid(
+            "Usuario invalido",
+            "El correo ya pertenece a otro usuario",
+          );
+          return;
+        }
+
+        await createMutation.mutateAsync(user);
+        successF("Usuario creado", "El usuario fue creado correctamente");
+      } catch (error) {
+        const mensaje =
+          error instanceof Error
+            ? error.message
+            : "No se pudo crear el usuario";
+
+        errorValid("Error al crear", mensaje);
+      }
+    },
+    [createMutation],
+  );
+
+  const updateUser = useCallback(
+    async (user: User) => {
+      try {
+        await updateMutation.mutateAsync(user);
+        successF(
+          "usuario actualizado",
+          "El usuario se actualizo correctamente",
+        );
+      } catch (error) {
+        const mensaje =
+          error instanceof Error
+            ? error.message
+            : "No se pudo actualizar el usuario";
+
+        errorValid("Error al actualizar", mensaje);
+      }
+    },
+    [updateMutation],
+  );
 
   return {
     modalIsOpen,

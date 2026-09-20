@@ -21,7 +21,7 @@ export const useAuthStore = create<UserState>()(
         if (!usuario || usuario.password !== password) {
           throw new Error("Correo o contraseña incorrectos");
         }
-        successF("inicio de sesion", "has iniciado sesion correctamente");
+        successF("Inicio de sesion", "Has iniciado sesion correctamente");
         set({ user: usuario });
         return usuario;
       },

@@ -1,11 +1,13 @@
 import { NavLink } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import { memo } from "react";
 
 type SidebarProps = {
   isCollapsed: boolean;
   toggleSidebar: () => void;
 };
 
-export const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
+export const Sidebar = memo(({ isCollapsed, toggleSidebar }: SidebarProps) => {
   const navItems = [
     { path: "/admin/reportes", label: "Reportes", icon: "bi bi-bar-chart" },
     { path: "/admin/pedidos", label: "Pedidos", icon: "bi bi-box-seam" },
@@ -13,9 +15,7 @@ export const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
     { path: "/admin/productos", label: "Productos", icon: "bi bi-tag" },
   ];
 
-  const handleLogout = () => {
-    console.log("Cerrando sesión...");
-  };
+  const { logout } = useAuthStore();
 
   return (
     <aside
@@ -59,7 +59,7 @@ export const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
 
       <div className="pt-3 border-top border-secondary">
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className="sidebar-nav-link btn w-100 text-start text-danger border-0 bg-transparent p-2"
           title={isCollapsed ? "Cerrar sesión" : ""}
         >
@@ -71,4 +71,4 @@ export const Sidebar = ({ isCollapsed, toggleSidebar }: SidebarProps) => {
       </div>
     </aside>
   );
-};
+});

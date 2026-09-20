@@ -10,8 +10,8 @@ import {
 
 //funcion para traer usuarios (10 por peticion)
 export async function getUsers(
-  page: number | undefined,
-  limit: number | undefined,
+  page?: number | undefined,
+  limit?: number | undefined,
   search?: string | undefined,
 ): Promise<User[] | null> {
   try {
@@ -82,12 +82,7 @@ async function putUser(user: User) {
     const response = await orderAPI.put(`/usuarios/${user.id}`, user);
     return response.data;
   } catch (error) {
-    throw (
-      new Error("Error actualizando el usuario"),
-      {
-        cause: error,
-      }
-    );
+    throw new Error("Error actualizando el usuario", { cause: error });
   }
 }
 
@@ -114,8 +109,8 @@ export function useCreateUser() {
 }
 
 export function useGetUsers(
-  page: number | undefined,
-  limit: number | undefined,
+  page?: number | undefined,
+  limit?: number | undefined,
   search?: string | undefined,
 ) {
   return useQuery({

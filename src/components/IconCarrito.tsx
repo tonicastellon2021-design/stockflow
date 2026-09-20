@@ -49,33 +49,33 @@ export function IconCarrito() {
         onClose={() => setIsOpen(false)}
         title="Tu carrito"
       >
-        <div className="container-fluid px-0">
+        <div className="cart-modal container-fluid px-0">
           {cart.length === 0 ? (
-            <p className="text-center text-white mb-0 py-3">
+            <p className="text-center text-dark mb-0 py-3">
               Tu carrito está vacío.
             </p>
           ) : (
             <>
-              <div className="list-group list-group-flush mb-4">
+              <div className="list-group list-group-flush mb-4 cart-items modal-scroll-list">
                 {cart.map(({ producto, cantidad }) => (
                   <div
                     key={producto.id}
-                    className="list-group-item bg-dark text-white border-secondary px-0 py-3"
+                    className="list-group-item cart-item border-light px-0 py-3"
                   >
                     <div className="d-flex align-items-center gap-3">
                       <img
                         src={producto.image}
                         alt={producto.nombre}
-                        className="rounded object-fit-cover"
+                        className="rounded object-fit-cover cart-item-image"
                         style={{ width: "64px", height: "64px" }}
                       />
 
                       <div className="flex-grow-1">
-                        <h3 className="h6 mb-1">{producto.nombre}</h3>
-                        <p className="small text-white-50 mb-1">
+                        <h3 className="h6 mb-1 text-dark">{producto.nombre}</h3>
+                        <p className="small text-muted mb-1">
                           ${formatPrecio(producto.precio)} c/u
                         </p>
-                        <strong>
+                        <strong className="text-dark">
                           ${formatPrecio(producto.precio * cantidad)}
                         </strong>
                       </div>
@@ -83,19 +83,19 @@ export function IconCarrito() {
                       <div className="d-flex align-items-center gap-2">
                         <button
                           type="button"
-                          className="btn btn-sm btn-outline-light px-2 py-1 fw-bold"
+                          className="btn btn-sm btn-outline-dark cart-qty-btn px-2 py-1 fw-bold"
                           onClick={() => addToCart(producto)}
                         >
                           +
                         </button>
-                        <span className="small fw-bold px-1">
+                        <span className="small fw-bold px-1 text-dark">
                           {cantidad} u.
                         </span>
                       </div>
                       <div className="d-flex align-items-center gap-2">
                         <button
                           type="button"
-                          className="btn btn-sm btn-outline-light px-2 py-1 fw-bold"
+                          className="btn btn-sm btn-outline-dark cart-qty-btn px-2 py-1 fw-bold"
                           onClick={() => decrementCartItem(producto.id)}
                           title="Quitar una unidad"
                         >
@@ -104,7 +104,7 @@ export function IconCarrito() {
                       </div>
                       <button
                         type="button"
-                        className="btn btn-link text-danger p-0 ms-2"
+                        className="btn btn-link cart-delete-btn p-0 ms-2"
                         onClick={() => removeFromCart(producto.id)}
                         aria-label={`Eliminar ${producto.nombre}`}
                       >
@@ -115,7 +115,7 @@ export function IconCarrito() {
                 ))}
               </div>
 
-              <div className="d-flex justify-content-between align-items-center pt-2 border-top border-secondary mb-4">
+              <div className="d-flex justify-content-between align-items-center pt-2 border-top border-light mb-4">
                 <button
                   type="button"
                   className="btn btn-sm btn-outline-danger"
@@ -125,25 +125,25 @@ export function IconCarrito() {
                 </button>
 
                 <div className="text-end">
-                  <span className="fw-bold me-2 text-white">Total:</span>
+                  <span className="fw-bold me-2 text-dark">Total:</span>
                   <span className="fs-4 fw-bold text-success">
                     ${formatPrecio(totalPrice())}
                   </span>
                 </div>
               </div>
 
-              <div className="pt-3 border-top border-secondary">
+              <div className="pt-3 border-top border-light">
                 <div className="row g-2 align-items-end">
                   <div className="col-6">
                     <label
                       htmlFor="paymentMethod"
-                      className="form-label text-white-50 small fw-bold mb-1"
+                      className="form-label text-dark small fw-bold mb-1"
                     >
                       Método de Pago
                     </label>
                     <select
                       id="paymentMethod"
-                      className="form-select bg-dark text-white border-secondary"
+                      className="form-select border-secondary text-dark"
                       value={metodoPago}
                       onChange={(e) =>
                         setMetodoPago(e.target.value as "contado" | "credito")
@@ -158,7 +158,7 @@ export function IconCarrito() {
                     <button
                       onClick={handleProcesarPedido}
                       type="button"
-                      className="btn btn-success w-100 fw-bold py-2 text-center"
+                      className="btn btn-stockflow w-100 fw-bold py-2 text-center"
                     >
                       Procesar Pago
                     </button>

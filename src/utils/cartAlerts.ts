@@ -77,7 +77,7 @@ export function showCartCleared() {
 
 export function errorValid(
   title = "Campos incompletos",
-  text = "Todos los campos son obligatorios y no pueden estar vacíos!",
+  text = "!Todos los campos son obligatorios y no pueden estar vacíos!",
 ) {
   Swal.fire({
     icon: "error",

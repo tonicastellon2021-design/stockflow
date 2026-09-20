@@ -2,40 +2,22 @@ import { Tabla } from "../../../components/Tabla";
 import { useGetUsers } from "../../../api/usuariosAPI";
 import { useSearchParams } from "react-router-dom";
 import { useCrudUsuarios } from "../../../hooks/useCrudUsuarios";
-import { useDebounce } from "../../../hooks/useDebounce";
-import { useEffect, useState } from "react";
+import { useSearchParamDebounced } from "../../../hooks/useSearchParamDebounced";
 import {
   UserForm,
   type UserFormData,
 } from "../../../components/forms/UserForm";
+import { Modal } from "../../../components/Modal";
 import type { User } from "../../../types/User";
+import FilaUsuarios from "../../../components/filas/FilaUsuarios";
 
-export function UsuariosCruds() {
-  const [searchParams, setSearchParams] = useSearchParams();
+function UsuariosCruds() {
+  const [searchParams] = useSearchParams();
   const pageParams = searchParams.get("page");
   const page = pageParams ? Number(pageParams) : 1;
   const page_limit = 10;
-  const searchParam = searchParams.get("search") ?? "";
-  const [searchTerm, setSearchTerm] = useState(searchParam);
-
-  const debounce = useDebounce(searchTerm).trim();
-
-  useEffect(() => {
-    if (debounce === searchParam) return;
-
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-
-      if (debounce) {
-        next.set("search", debounce);
-      } else {
-        next.delete("search");
-      }
-
-      next.set("page", "1");
-      return next;
-    });
-  }, [debounce, searchParam, setSearchParams]);
+  const { searchTerm, setSearchTerm, searchParam } =
+    useSearchParamDebounced("search");
 
   const {
     data: usuarios,
@@ -72,22 +54,32 @@ export function UsuariosCruds() {
   }
 
   const onSubmit = async (data: UserFormData) => {
+    const correo = data.correo.trim();
+    const password = data.password.trim();
+    const rol = data.rol.trim();
+
+    if (!correo || !password || !rol) {
+      return;
+    }
+
     if (userSeleccionado) {
       const userUpdate: User = {
         id: userSeleccionado.id,
-        correo: data.correo,
-        password: data.password,
-        rol: data.rol,
+        correo,
+        password,
+        rol,
       };
 
       await updateUser(userUpdate);
+      cerrarModal();
       return;
     }
+
     const newUSer: User = {
       id: crypto.randomUUID(),
-      correo: data.correo,
-      password: data.password,
-      rol: data.rol,
+      correo,
+      password,
+      rol,
     };
 
     await createUser(newUSer);
@@ -95,7 +87,7 @@ export function UsuariosCruds() {
   };
 
   return (
-    <div className="usuarios-page-shell">
+    <div className="page-shell">
       <Tabla
         actionButton={abrirModalCrear}
         onSearchChange={setSearchTerm}
@@ -131,68 +123,33 @@ export function UsuariosCruds() {
             </tr>
           ) : (
             usuarios.map((usuario) => (
-              <tr key={usuario.id}>
-                <td className="ps-4 fw-semibold text-muted">#{usuario.id}</td>
-                <td>
-                  <div className="d-flex align-items-center gap-2">
-                    <div
-                      className="bg-light rounded-circle d-flex align-items-center justify-content-center text-muted"
-                      style={{ width: "32px", height: "32px" }}
-                    >
-                      <i className="bi bi-person"></i>
-                    </div>
-                    <span className="fw-medium text-dark">
-                      {usuario.correo}
-                    </span>
-                  </div>
-                </td>
-                <td className="text-secondary">{usuario.password}</td>
-                <td>
-                  <span
-                    className={`badge border px-2 py-1 fw-normal ${
-                      usuario.rol === "admin"
-                        ? "bg-danger-subtle text-danger border-danger-subtle"
-                        : "bg-success-subtle text-success border-success-subtle"
-                    }`}
-                  >
-                    {usuario.rol}
-                  </span>
-                </td>
-                <td className="text-end pe-4">
-                  <div className="d-flex justify-content-end gap-1">
-                    <button
-                      disabled={usuario.rol === "admin"}
-                      onClick={() => abrirModalEditar(usuario)}
-                      className="btn btn-sm user-action user-action-edit"
-                      title="Editar"
-                      aria-label={`Editar usuario ${usuario.correo}`}
-                    >
-                      <i className="bi bi-pencil-square"></i>
-                    </button>
-                    <button
-                      disabled={usuario.rol === "admin"}
-                      onClick={() => deleteUser(usuario)}
-                      className="btn btn-sm user-action user-action-delete"
-                      title="Eliminar"
-                      aria-label={`Eliminar usuario ${usuario.correo}`}
-                    >
-                      <i className="bi bi-trash3"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              <FilaUsuarios
+                key={usuario.id}
+                usuario={usuario}
+                onEditar={abrirModalEditar}
+                onEliminar={deleteUser}
+              ></FilaUsuarios>
             ))
           )}
         </tbody>
       </Tabla>
       {modalIsOpen && (
-        <UserForm
-          onSubmit={onSubmit}
-          modalIsOpen={modalIsOpen}
-          cerrarModal={cerrarModal}
-          userSeleccionado={userSeleccionado}
-        ></UserForm>
+        <Modal
+          isOpen={modalIsOpen}
+          onClose={cerrarModal}
+          title={
+            userSeleccionado === null ? "Crear un cliente" : "Editar un cliente"
+          }
+        >
+          <UserForm
+            onSubmit={onSubmit}
+            cerrarModal={cerrarModal}
+            userSeleccionado={userSeleccionado}
+          />
+        </Modal>
       )}
     </div>
   );
 }
+
+export default UsuariosCruds;
