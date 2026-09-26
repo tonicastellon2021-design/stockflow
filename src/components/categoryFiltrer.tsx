@@ -1,17 +1,28 @@
 import { useSearchParams } from "react-router-dom";
-import { CATEGORIAS } from "../constants/categorias";
+import AsyncSelect from "react-select/async";
+import { getCategorias } from "../api/productsAPI";
+import type { CategoryOption } from "../types/CategoryOption";
+import debouncePromise from "debounce-promise";
+
+const funcionesConRetraso = debouncePromise(
+  (inputValue: string) => getCategorias(inputValue),
+  500,
+);
 
 export function CategoryFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const categoria = searchParams.get("categoria") || "";
+  const categoriaParam = searchParams.get("categoria") || "";
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = e.target.value;
+  const currentOption: CategoryOption | null = categoriaParam
+    ? { value: categoriaParam, label: categoriaParam }
+    : null;
+
+  const handleChange = (selectedOption: CategoryOption | null) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
-      if (selectedValue) {
-        next.set("categoria", selectedValue);
+      if (selectedOption) {
+        next.set("categoria", selectedOption.value);
       } else {
         next.delete("categoria");
       }
@@ -26,20 +37,34 @@ export function CategoryFilter() {
         <div className="d-flex align-items-center justify-content-center gap-2 rounded-4 border border-light-subtle bg-light px-3 py-2 shadow-sm">
           <i className="bi bi-funnel text-success fs-5"></i>
           <span className="small fw-semibold text-secondary">Categoría</span>
-          <select
-            className="form-select border-0 bg-transparent shadow-none text-dark fw-medium"
-            value={categoria}
-            onChange={handleChange}
-            aria-label="Seleccionar categoría"
-            style={{ maxWidth: "260px" }}
-          >
-            <option value="">Todas las categorías</option>
-            {CATEGORIAS.map(({ value, label }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
+
+          <div className="flex-grow-1" style={{ maxWidth: "260px" }}>
+            <AsyncSelect<CategoryOption>
+              cacheOptions
+              defaultOptions
+              isClearable
+              value={currentOption}
+              loadOptions={funcionesConRetraso}
+              onChange={handleChange}
+              placeholder="Todas las categorías"
+              noOptionsMessage={() => "No hay resultados"}
+              loadingMessage={() => "Cargando..."}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: "transparent",
+                  border: "none",
+                  boxShadow: "none",
+                  minHeight: "auto",
+                  cursor: "pointer",
+                }),
+                menu: (base) => ({
+                  ...base,
+                  zIndex: 9999,
+                }),
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>

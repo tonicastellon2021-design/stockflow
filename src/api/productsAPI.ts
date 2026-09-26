@@ -7,6 +7,7 @@ import {
 import type { Product } from "../types/Product";
 import { catalogApi } from "./axiosClients";
 import axios from "axios";
+import type { CategoryOption } from "../types/CategoryOption";
 
 async function getProducts(
   page?: number | undefined,
@@ -55,6 +56,34 @@ async function putProduct(product: Product) {
     throw new Error("Error al actualizar el producto", {
       cause: error,
     });
+  }
+}
+
+export async function getCategorias(
+  inputValue: string,
+): Promise<CategoryOption[]> {
+  try {
+    const response = await catalogApi.get<Product[]>("/productos");
+
+    const todasLasCategorias = response.data.map((p) => p.categoria);
+
+    const categoriasUnicas = Array.from(new Set(todasLasCategorias));
+
+    // 3. Filtramos por la búsqueda del usuario (inputValue)
+    const filtradas = categoriasUnicas.filter((cat) =>
+      cat.toLowerCase().includes(inputValue.toLowerCase()),
+    );
+
+    // 4. Mapeamos al formato requerido por react-select
+    return filtradas.map((cat) => ({
+      value: cat,
+      label: cat,
+    }));
+  } catch (error) {
+    console.log("Error al traer la categorias", {
+      cause: error,
+    });
+    return [];
   }
 }
 

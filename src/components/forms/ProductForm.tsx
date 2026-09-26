@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import type { Product } from "../../types/Product";
 import { CATEGORIAS } from "../../constants/categorias";
+import Select from "react-select";
 
 export interface ProductformData {
   nombre: string;
@@ -10,6 +12,8 @@ export interface ProductformData {
   image?: string;
   descripcion: string;
 }
+
+type ProductFormFields = Omit<ProductformData, "categoria">;
 
 interface Props {
   cerrarModal: () => void;
@@ -22,16 +26,22 @@ export function ProductForm({
   productSeleccionado,
   onSubmit,
 }: Props) {
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(
+    () =>
+      CATEGORIAS.find(
+        (categoria) => categoria.value === productSeleccionado?.categoria,
+      ) ?? CATEGORIAS[0],
+  );
+
   const {
     handleSubmit,
     register,
     formState: { errors },
     watch,
-  } = useForm<ProductformData>({
+  } = useForm<ProductFormFields>({
     defaultValues: {
       nombre: productSeleccionado?.nombre ?? "",
       precio: productSeleccionado?.precio ?? 0,
-      categoria: productSeleccionado?.categoria ?? "",
       stock: productSeleccionado?.stock ?? 0,
       image: productSeleccionado?.image ?? "",
       descripcion: productSeleccionado?.descripcion ?? "",
@@ -42,7 +52,11 @@ export function ProductForm({
   const previewUrl = (watch("image") ?? "").trim();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit((data) =>
+        onSubmit({ ...data, categoria: categoriaSeleccionada.value }),
+      )}
+    >
       <div className="mb-3">
         <label className="form-label fw-semibold">Nombre del producto</label>
         <input
@@ -82,22 +96,61 @@ export function ProductForm({
 
       <div className="mb-3">
         <label className="form-label fw-semibold">Categoría</label>
-        <select
-          className={`form-select ${errors.categoria ? "is-invalid" : ""}`}
-          {...register("categoria", {
-            required: "La categoría es obligatoria",
-            validate: (value) =>
-              value.trim().length > 0 || "La categoría es obligatoria",
-          })}
-        >
-          <option value="">Selecciona una categoría</option>
-          {CATEGORIAS.map(({ value }) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
-        <span className="error_text">{errors.categoria?.message}</span>
+        <Select<(typeof CATEGORIAS)[number]>
+          options={CATEGORIAS}
+          value={categoriaSeleccionada}
+          onChange={(opcion) => {
+            if (opcion) setCategoriaSeleccionada(opcion);
+          }}
+          isClearable={false}
+          isSearchable={false}
+          menuPortalTarget={document.body}
+          styles={{
+            control: (base, state) => ({
+              ...base,
+              minWidth: 0,
+              backgroundColor: "#ffffff",
+              borderColor: state.isFocused ? "var(--sf-green)" : "#ced4da",
+              boxShadow: state.isFocused
+                ? "0 0 0 0.2rem rgba(25, 135, 84, 0.25)"
+                : "none",
+              cursor: "pointer",
+              ":hover": { borderColor: "var(--sf-green)" },
+            }),
+            singleValue: (base) => ({ ...base, color: "#212529" }),
+            placeholder: (base) => ({ ...base, color: "#6c757d" }),
+            dropdownIndicator: (base, state) => ({
+              ...base,
+              color: state.isFocused ? "var(--sf-green)" : "#6c757d",
+              ":hover": { color: "var(--sf-green)" },
+            }),
+            indicatorSeparator: (base) => ({
+              ...base,
+              backgroundColor: "#ced4da",
+            }),
+            menu: (base) => ({
+              ...base,
+              backgroundColor: "#ffffff",
+              border: "1px solid #ced4da",
+              zIndex: 2000,
+            }),
+            menuPortal: (base) => ({ ...base, zIndex: 2000 }),
+            option: (base, state) => ({
+              ...base,
+              backgroundColor: state.isSelected
+                ? "var(--sf-green)"
+                : state.isFocused
+                  ? "rgba(25, 135, 84, 0.12)"
+                  : "#ffffff",
+              color: state.isSelected ? "#ffffff" : "#212529",
+              cursor: "pointer",
+              ":active": {
+                backgroundColor: "var(--sf-green-hover)",
+                color: "#ffffff",
+              },
+            }),
+          }}
+        />
       </div>
 
       <div className="mb-3">

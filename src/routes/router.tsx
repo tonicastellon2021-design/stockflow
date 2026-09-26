@@ -21,6 +21,22 @@ const ProductosCrud = lazy(
   () => import("../modules/admin/pages/ProductosCrud"),
 );
 
+const ListaProductos = lazy(
+  () => import("../modules/admin/pagesEjercicios/Eje1"),
+);
+
+const InventarioBodegas = lazy(
+  () => import("../modules/admin/pagesEjercicios/Eje2"),
+);
+
+const InventarioEmpresa = lazy(
+  () => import("../modules/admin/pagesEjercicios/Eje3"),
+);
+
+const DashboardCorporativo = lazy(
+  () => import("../modules/admin/pagesEjercicios/Eje4"),
+);
+
 const router = createBrowserRouter(
   [
     {
@@ -68,6 +84,10 @@ const router = createBrowserRouter(
         { path: "usuarios", element: <UsuariosCruds /> },
         { path: "pedidos", element: <PedidosCrud /> },
         { path: "productos", element: <ProductosCrud /> },
+        { path: "ejercicio-1", element: <ListaProductos /> },
+        { path: "ejercicio-2", element: <InventarioBodegas /> },
+        { path: "ejercicio-3", element: <InventarioEmpresa /> },
+        { path: "ejercicio-4", element: <DashboardCorporativo /> },
       ],
     },
     {

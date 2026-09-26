@@ -6,4 +6,4 @@ export const CATEGORIAS = [
   { value: "Almacenamiento", label: "Almacenamiento" },
   { value: "Refrigeración", label: "Refrigeración" },
   { value: "Fuente de poder", label: "Fuente de poder" },
-] as const;
+];
