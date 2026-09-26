@@ -1,38 +1,40 @@
-# StockFlow
+# StockFlow  
 
-Proyecto de práctica personal en React + TypeScript, construido para reforzar temas de rendimiento, hooks avanzados y patrones de arquitectura frontend
-
-**Estado: en construcción activa.** No es un proyecto terminado ni pensado para producción — es un espacio de práctica. Algunas partes del panel de administración están incompletas o en proceso de construcion.
+Proyecto de práctica personal en React + TypeScript, construido para reforzar temas de rendimiento, hooks avanzados y patrones de arquitectura frontend.
 
 ## Stack
 
 - React + TypeScript + Vite
-- TanStack Query
-- Zustand
-- React Hook Form
-- React Router
-- Bootstrap + SweetAlert2
+- TanStack Query (fetching, caché, paginación)
+- Zustand (estado global con persistencia)
+- React Hook Form (formularios y validación)
+- React Router (rutas protegidas por rol, lazy loading)
+- Bootstrap + Bootstrap Icons
+- SweetAlert2 (alertas y confirmaciones)
 - MockAPI como backend simulado
 
-## Estado actual
+## Funcionalidades
 
-- ✅ Catálogo público con filtros, paginación y carrito
-- ✅ Autenticación con persistencia de sesión (Zustand + localStorage)
-- ✅ Rutas protegidas por rol (cliente / admin)
-- ✅ Flujo de pedido con reducción de stock
-- 🚧 CRUD de usuarios del panel admin (formulario de crear/editar aún no conectado)
-- 🚧 CRUD de productos y pedidos del panel admin
-- 🚧 Pulido de estilos y consistencia visual en progreso
+**Tienda pública**
+- Catálogo con filtro por categoría, búsqueda y paginación
+- Carrito de compras persistente (localStorage vía Zustand)
+- Registro e inicio de sesión con persistencia de sesión
+- Flujo de pedido completo con reducción de stock automática
 
-## Nota
+**Panel de administración** (protegido por rol)
+- Gestión de productos: crear, editar, eliminar, con vista previa de imagen por URL
+- Gestión de usuarios: crear, editar, eliminar, con protección contra auto-edición/auto-eliminación
+- Gestión de pedidos: consulta y actualización de estado
+- Reportes: ingresos totales, pedidos pendientes, usuarios registrados, productos con stock bajo
 
-Al ser un proyecto de práctica sobre una API simulada (MockAPI), los datos de usuarios son de prueba y no representan información real
+**Optimización**
+- Code splitting con `React.lazy` en las rutas del panel admin
+- `React.memo` + `useCallback` en las filas de las tablas para evitar renders innecesarios
+- Búsqueda con debounce en catálogo y tablas de administración
 
 ## Usuarios de prueba
 
-Puedes utilizar estos usuarios para probar el inicio de sesión y las rutas según el rol:
-
-| Correo                    | Contraseña | Rol           |
-| ------------------------- | ---------- | ------------- |
-| `admin@gmail.com`         | `12345`    | Administrador |
-| `clientePrueba@yahoo.com` | `123`      | Cliente       |
+| Correo | Contraseña | Rol |
+|---|---|---|
+| admin@gmail.com | 123456 | admin |
+| clientePrueba@yahoo.com | 123456 | cliente | 
